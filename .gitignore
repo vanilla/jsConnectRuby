@@ -1,0 +1,15 @@
+.bundle
+db/*.sqlite3
+log/*.log
+tmp/
+Gemfile*
+config*
+nbproject*
+public*
+script*
+test*
+*.gitkeep
+Rakefile
+app/controllers/application_controller.rb
+app/helpers*
+app/views*
