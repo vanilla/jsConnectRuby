@@ -22,13 +22,13 @@ module JsConnect
           error = JsConnect.error('invalid_request', 'The client_id parameter is missing.')
         elsif request['client_id'] != client_id
           error = JsConnect.error('invalid_client', "Unknown client #{request['client_id']}.")
-        elsif !timestamp and !request['signature']
+        elsif request['timestamp'].nil? and request['signature'].nil?
           if user and !user.empty?
             error = {'name' => user['name'], 'photourl' => user['photourl']}
           else
             error = {'name' => '', 'photourl' => ''}
           end
-        elsif timestamp == 0
+        elsif request['timestamp'].nil?
           error = JsConnect.error('invalid_request', 'The timestamp is missing or invalid.')
         elsif !request['signature']
           error = JsConnect.error('invalid_request', 'The signature is missing.')
