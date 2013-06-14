@@ -72,7 +72,7 @@ module JsConnect
       end
       
        value = data[key]
-       sig_str += CGI.escape(key) + "=" + CGI.escape(value)
+       sig_str += CGI.escape(key) + "=" + CGI.escape(value.to_s)
      end
      
      signature = Digest::MD5.hexdigest(sig_str + secret);
