@@ -25,6 +25,8 @@ class SsoController < ApplicationController
     # 4. Generate the jsConnect string.
     secure = true # this should be true unless you are testing.
     json = JsConnect.getJsConnectString(user, self.params, client_id, secret, secure)
+    # To use a different digest such as SHA1 
+    # json = JsConnect.getJsConnectString(user, self.params, client_id, secret, secure, Digest::SHA1)
     
     render :text => json
   end
