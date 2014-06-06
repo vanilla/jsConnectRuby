@@ -101,7 +101,7 @@ module JsConnect
   # Examples
   #
   #   JsConnect.getSSOString({ name => "John Ruby", ... }, "1234", "1234")
-  #   # => eyJ1bmlx... 0fe8d102... 1402067133 hmacsha1
+  #   # => "eyJ1bmlx... 0fe8d102... 1402067133 hmacsha1"
   #
   # Returns the generated SSO string.
   def JsConnect.getSSOString(user, client_id, secret)
