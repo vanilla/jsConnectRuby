@@ -92,6 +92,18 @@ module JsConnect
     return Time.now.to_i
   end
 
+  # Public: Generate an SSO string suitible for passing in the url for embedded SSO.
+  # 
+  # user      - The user to sso.
+  # client_id - Your client ID.
+  # secret    - Your secret.
+  #
+  # Examples
+  #
+  #   JsConnect.getSSOString({ name => "John Ruby", ... }, "1234", "1234")
+  #   # => eyJ1bmlx... 0fe8d102... 1402067133 hmacsha1
+  #
+  # Returns the generated SSO string.
   def JsConnect.getSSOString(user, client_id, secret)
     if !user["client_id"]
       user["client_id"] = client_id
