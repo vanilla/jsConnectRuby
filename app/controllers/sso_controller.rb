@@ -15,17 +15,17 @@ class SsoController < ApplicationController
     user = {}
 
     if signedIn
-       # CHANGE THESE FOUR LINES.
-       user["uniqueid"] = "234"
-       user["name"] = "John Ruby"
-       user["email"] = "john.ruby@anonymous.com"
-       user["photourl"] = ""
+      # CHANGE THESE FOUR LINES.
+      user["uniqueid"] = "234"
+      user["name"] = "John Ruby"
+      user["email"] = "john.ruby@anonymous.com"
+      user["photourl"] = ""
     end
 
     # 4. Generate the jsConnect string.
     secure = true # this should be true unless you are testing.
     json = JsConnect.getJsConnectString(user, self.params, client_id, secret, secure)
-    
+
     render :text => json
   end
 
