@@ -2,6 +2,8 @@
 
 This repository contains the files you need to use Vanilla's jsConnect with a ruby/rails project.
 
+Documentation about the purpose of jsConnect is available at http://blog.vanillaforums.com/help/vanilla-jsconnect-single-signon-on/
+
 The following files are included in this repo.
 
 * [`lib/js_connect.rb`](https://github.com/vanillaforums/jsConnectRuby/blob/master/lib/js_connect.rb)
