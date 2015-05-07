@@ -13,7 +13,7 @@ module JsConnect
     return {"error" => code, "message" => message}
   end
 
-  def JsConnect.getJsConnectString(user, request = {}, client_id = "", secret = "", secure = true)
+    def JsConnect.getJsConnectString(user, request = {}, client_id = "", secret = "", secure = true, digest = Digest::MD5)
     error = nil
 
     timestamp = request["timestamp"].to_i
@@ -39,7 +39,7 @@ module JsConnect
         error = JsConnect.error('invalid_request', 'The timestamp is invalid.')
       else
         # Make sure the timestamp's signature checks out.
-        timestamp_sig = Digest::MD5.hexdigest(timestamp.to_s + secret)
+          timestamp_sig = digest.hexdigest(timestamp.to_s + secret)
         if timestamp_sig != request['signature']
           error = JsConnect.error('access_denied', 'Signature invalid.')
         end
@@ -50,7 +50,7 @@ module JsConnect
       result = error
     elsif user and !user.empty?
       result = user.clone
-      JsConnect.signJsConnect(result, client_id, secret, true)
+        JsConnect.signJsConnect(result, client_id, secret, true, digest)
     else
       result = {"name" => "", "photourl" => ""}
     end
@@ -63,7 +63,7 @@ module JsConnect
     end
   end
 
-  def JsConnect.signJsConnect(data, client_id, secret, set_data = false)
+   def JsConnect.signJsConnect(data, client_id, secret, set_data = false, digest = Digest::MD5)
     # Build the signature string. This is essentially a querystring representation of data, sorted by key
     keys = data.keys.sort { |a,b| a.downcase <=> b.downcase }
 
@@ -75,10 +75,10 @@ module JsConnect
       end
 
       value = data[key]
-      sig_str += CGI.escape(key) + "=" + CGI.escape(value)
+       sig_str += CGI.escape(key) + "=" + CGI.escape(value.to_s)
     end
 
-    signature = Digest::MD5.hexdigest(sig_str + secret);
+     signature = digest.hexdigest(sig_str + secret);
 
     if set_data
       data["clientid"] = client_id
