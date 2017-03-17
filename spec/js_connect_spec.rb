@@ -41,7 +41,7 @@ describe JsConnect do
         signature = JsConnect.signJsConnect(data, client_id, secret, false, Digest::SHA1)
         signature.should eq('d57a237e617f19454ac888047d386e5878d78fe7')
       end
-    end    
+    end
   end
 
   describe "getJsConnectString" do
@@ -52,7 +52,7 @@ describe JsConnect do
     it "uses MD5 digest by default" do
       timestamp = Time.now.to_i
       signature = Digest::MD5.hexdigest(timestamp.to_s + secret)
-      request = { 'client_id' => '12345', 'timestamp' => timestamp.to_s, 'signature' => signature }
+      request = { 'client_id' => '12345', 'timestamp' => timestamp.to_s, 'sig' => signature }
 
       Digest::MD5.should_receive(:hexdigest).with(timestamp.to_s + secret).and_call_original
       JsConnect.should_receive(:signJsConnect).with(data, client_id, secret, true, Digest::MD5)
@@ -63,7 +63,7 @@ describe JsConnect do
       it "uses SHA1 digest instead of the default" do
         timestamp = Time.now.to_i
         signature = Digest::SHA1.hexdigest(timestamp.to_s + secret)
-        request = { 'client_id' => '12345', 'timestamp' => timestamp.to_s, 'signature' => signature }
+        request = { 'client_id' => '12345', 'timestamp' => timestamp.to_s, 'sig' => signature }
 
         Digest::SHA1.should_receive(:hexdigest).with(timestamp.to_s + secret).and_call_original
         JsConnect.should_receive(:signJsConnect).with(data, client_id, secret, true, Digest::SHA1)
