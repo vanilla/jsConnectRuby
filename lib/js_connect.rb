@@ -1,6 +1,6 @@
 # This module contains the client code for Vanilla jsConnect single sign on
 # Author:: Todd Burry (mailto:todd@vanillaforums.com)
-# Version:: 1.0b
+# Version:: 1.0
 # Copyright:: Copyright 2008, 2009 Vanilla Forums Inc.
 # License http://www.opensource.org/licenses/gpl-2.0.php GPLv2
 
