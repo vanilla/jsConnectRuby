@@ -7,6 +7,7 @@
 require "openssl"
 require "json"
 require "base64"
+require "cgi"
 
 module JsConnect
   VERSION = '2'
@@ -70,6 +71,7 @@ module JsConnect
     end
 
     json = ActiveSupport::JSON.encode(result);
+    request["callback"] = CGI.escapeHTML(request["callback"]);
     if request["callback"]
       return "#{request["callback"]}(#{json});"
     else
