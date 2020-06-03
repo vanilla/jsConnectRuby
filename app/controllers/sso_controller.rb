@@ -24,7 +24,13 @@ class SsoController < ActionController::Base
     end
 
     # 4. Generate the jsConnect string.
-    jsResponse = JsConnect.getJsConnectResponse(user, self.params, client_id, secret, Digest::SHA1)
+    begin
+      jsResponse = JsConnect.getJsConnectResponse(user, self.params, client_id, secret, Digest::SHA1)
+      
+    rescue StandardError => e
+      # 4a. You should handle an error and render out an appropriate response.
+      jsResponse = JsConnect::Response.new 400, "text/plain", e.message
+    end
     # To use the jsConnect v2 protocol only use:
     # json = JsConnect.getJsConnectString(user, self.params, client_id, secret, secure, Digest::SHA1)
 

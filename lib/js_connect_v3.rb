@@ -109,20 +109,15 @@ class JsConnectV3
   end
 
   def jwt_decode(jwt)
-    decoded = JWT.decode jwt, @secret, true
+    begin
+      decoded = JWT.decode jwt, @secret, true
+    rescue JWT::DecodeError => e;
+      raise(JWT::DecodeError, "There was an error decoding the JWT: " + e.message)
+    end
     header = decoded[1]
     payload = decoded[0]
 
     return payload
-
-    # protected function jwtDecode(string $jwt): array {
-    #   /**
-    #      * @psalm-suppress InvalidArgument
-    #      */
-    #   $payload = JWT::decode($jwt, $this->keys, self::ALLOWED_ALGORITHMS);
-    #   $payload = $this->stdClassToArray($payload);
-    #   return $payload;
-    # }
   end
 
   def get_timestamp
