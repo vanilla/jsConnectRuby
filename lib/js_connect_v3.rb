@@ -1,5 +1,6 @@
 require "jwt"
 
+# Implements the jsConnect v3 protocol.
 class JsConnectV3
   VERSION = "java:3"
 
@@ -26,15 +27,15 @@ class JsConnectV3
 
   TIMEOUT = 600
 
-  @secret = ""
+  @secret
 
-  @client_id = ""
+  @client_id
 
-  @user = {}
+  @user
 
-  @guest = false
+  @guest
 
-  @algorithm = ALG_HS256
+  @algorithm
 
   @version
 
@@ -92,6 +93,7 @@ class JsConnectV3
     @guest = value
   end
 
+  # Validate that a field in a collection exists.
   def validate_field_exists(field, collection, collection_name = "payload", validate_empty = true)
     if collection == nil
       raise "Invalid collection: #{collection_name}"
@@ -108,6 +110,7 @@ class JsConnectV3
     return collection[field]
   end
 
+  # Decode a JWT token.
   def jwt_decode(jwt)
     begin
       decoded = JWT.decode jwt, @secret, true
@@ -120,10 +123,12 @@ class JsConnectV3
     return payload
   end
 
+  # Get the current timestamp used to sign and validate tokens.
   def get_timestamp
     @timestamp > 0 ? @timestamp : Time.now.to_i
   end
 
+  # Encode a JWT and add default headers.
   def jwt_encode(payload)
     payload = {
         "v" => @version,
@@ -136,6 +141,8 @@ class JsConnectV3
     return jwt
   end
 
+  # Generate the response location.
+  # Call this method and then 302 redirect to the returned URL.
   def generate_response_location(query)
     jwt = validate_field_exists FIELD_JWT, query, "query"
     request = jwt_decode jwt
