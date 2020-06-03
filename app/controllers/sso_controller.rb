@@ -24,12 +24,16 @@ class SsoController < ActionController::Base
     end
 
     # 4. Generate the jsConnect string.
-    secure = true # this should be true unless you are testing.
-    json = JsConnect.getJsConnectString(user, self.params, client_id, secret, secure)
-    # To use a different digest such as SHA1
+    jsResponse = JsConnect.getJsConnectResponse(user, self.params, client_id, secret, Digest::SHA1)
+    # To use the jsConnect v2 protocol only use:
     # json = JsConnect.getJsConnectString(user, self.params, client_id, secret, secure, Digest::SHA1)
 
-    render :js => json
+    if jsResponse.status == 302
+      redirect_to jsResponse.content, :status => jsResponse.status
+    else
+      response.status = jsResponse.status
+      response.content_type = jsResponse.content_type
+      render :js => jsResponse.content
+    end
   end
-
 end
