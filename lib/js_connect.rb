@@ -8,6 +8,7 @@ require "openssl"
 require "json"
 require "base64"
 require "cgi"
+require "js_connect_v3"
 
 module JsConnect
   VERSION = '2'
@@ -17,7 +18,38 @@ module JsConnect
     return {"error" => code, "message" => message}
   end
 
-  def JsConnect.getJsConnectString(user, request = {}, client_id = "", secret = "", secure = true, digest = Digest::MD5)
+  #
+  #
+  # @param [ActionController::Parameters] query
+  # @return [JsConnect::Response]
+  def self.getJsConnectResponse(user, query = {}, client_id = "", secret = "", digest = Digest::SHA1)
+    if query.has_key?("jwt")
+      location = getResponseLocation user, query, client_id, secret
+      response = Response.new(302, "text/html", location)
+    else
+      js = getJsConnectString user, query, client_id, secret, true, digest
+      response = Response.new(200, "text/javascript; charset=utf-8", js)
+    end
+
+    return response
+  end
+
+  # @param [Hash] user
+  # @param [Hash] query
+  # @param [String] client_id
+  # @param [String] secret
+  def self.getResponseLocation(user, query, client_id, secret)
+    jsc = JsConnectV3.new
+
+    jsc.set_client_id client_id
+    jsc.set_secret secret
+
+    user.each { |k, v| jsc.set_user_field k, v }
+
+    jsc.generate_response_location query
+  end
+
+  def self.getJsConnectString(user, request = {}, client_id = "", secret = "", secure = true, digest = Digest::MD5)
     error = nil
 
     timestamp = request['timestamp'].to_i
@@ -71,7 +103,6 @@ module JsConnect
     end
 
     json = ActiveSupport::JSON.encode(result);
-    request["callback"] = CGI.escapeHTML(request["callback"]);
     if request["callback"]
       return "#{request["callback"]}(#{json});"
     else
@@ -133,5 +164,25 @@ module JsConnect
     result = "#{string} #{hash} #{timestamp} hmacsha1"
 
     return result
+  end
+
+  class Response
+    def initialize(status, content_type, content)
+      @status = status
+      @content_type = content_type
+      @content = content
+
+      def self.status
+        @status
+      end
+
+      def self.content_type
+        @content_type
+      end
+
+      def self.content
+        @content
+      end
+    end
   end
 end
